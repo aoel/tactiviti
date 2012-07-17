@@ -1,10 +1,11 @@
 package de.spqrinfo.bpmn;
 
-import java.io.FileInputStream;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.DeploymentBuilder;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 
 /**
@@ -13,8 +14,8 @@ import org.activiti.engine.runtime.ProcessInstance;
  */
 public class Main {
 
-    public static final String PROCESS_NAME = "first";
-    public static final String PROCESS_FILENAME = "first.bpmn20.xml";
+    public static final String PROCESS_NAME = "brotkaufen";//"first";
+    public static final String PROCESS_FILENAME = "brotkaufen.bpmn20.xml";//"first.bpmn20.xml";
 
     public static void main(String[] args) {
         ProcessEngine processEngine = null;
@@ -27,8 +28,14 @@ public class Main {
             deploymentBuilder.addClasspathResource(PROCESS_FILENAME);
             deploymentBuilder.deploy();
 
+            System.out.println("------------------------------------");
+            ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+            for (ProcessDefinition proc : processDefinitionQuery.list()) {
+                System.out.println(proc);
+            }
 
             ProcessInstance processInstance = processEngine.getRuntimeService().startProcessInstanceByKey(PROCESS_NAME);
+            
 
             System.out.println("ProcessInstance.isEnded " + processInstance.isEnded());
 
